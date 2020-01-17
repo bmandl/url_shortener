@@ -9,9 +9,15 @@
 	"dependencies": {
 		"body-parser": "^1.15.2",
 		"cors": "^2.8.1",
+		"dns": "^0.2.2",
+		"dotenv": "^8.2.0",
 		"express": "^5.0.0-alpha.2",
 		"mongodb": "^3.3.5",
-		"mongoose": "^5.7.13"
+		"mongoose": "^5.7.13",
+		"mongoose-auto-increment": "^5.0.1",
+		"mongoose-generate-unique-key": "^0.1.2",
+		"nanoid": "^2.1.9",
+		"shortid": "^2.2.15"
 	},
 	"engines": {
 		"node": ">=12.0.0"
