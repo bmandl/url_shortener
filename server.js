@@ -7,6 +7,7 @@ const dotenv = require("dotenv");
 var dns = require("dns");
 var bodyParser = require('body-parser');
 const ShortUrl = require('nanoid/generate');
+var validUrl = require('valid-url');
 
 dotenv.config();
 
@@ -46,29 +47,35 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.post("/api/shorturl/new", (req, res) => {
 
-  var newUrl = new Url(({ original_url: req.body.url , short_url: ShortUrl('1234567890',3)}));
+    var newUrl = new Url(({ original_url: req.body.url, short_url: ShortUrl('1234567890', 3) }));
 
-  Url.find({ original_url: newUrl.original_url }, (err, data) => {
-    if (err) return console.err(err);
-    if (!data.length) {
-      newUrl.save((err1, entry) => {
-        if (err1) return console.err(err1);
-      });
-      res.json(newUrl);
-      console.log("Url added");      
-    }
-    else {
-      console.log("Url already exists");
-      res.json(data);
-    }
+    Url.find({ original_url: newUrl.original_url }, (err, data) => {
+      if (err) return console.error(err);
+      if (!data.length) {
+        newUrl.save((err1, entry) => {
+          if (err1) return console.error(err1);
+        });
+        res.json(newUrl);
+        console.log("Url added");
+      }
+      else {
+        console.log("Url already exists");
+        res.json(data);
+      }
+    });
   });
-});
 
 
-/*Url.find((err, data) => {
-  if (err) return console.err(err);
-  console.log(data);
-});*/
+app.get('/api/shorturl/:shortUrl',(req,res) => {
+  Url.findOne({short_url:parseInt(req.params.shortUrl.toString())},(err,data) => {
+    if(err) return console.error(err);
+    console.log(data);
+    if(data)
+      res.redirect(data.original_url);
+    else
+      res.json({error:"Url does not exist"});
+  })
+})
 
 app.use('/public', express.static(process.cwd() + '/public'));
 
