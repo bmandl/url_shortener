@@ -47,6 +47,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.post("/api/shorturl/new", (req, res) => {
 
+    var validUrl = /^(http|https):\/\/[^ "]+$/.test(req.body.url);
+    if (validUrl){
+      dns.lookup(req.body.url,4,(err,address,family) => {
+        if(err) return console.error(err);
+      })      
+    }
+    else return res.json({error: "Invalid url"});
+
     var newUrl = new Url(({ original_url: req.body.url, short_url: ShortUrl('1234567890', 3) }));
 
     Url.find({ original_url: newUrl.original_url }, (err, data) => {
